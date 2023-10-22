@@ -19,18 +19,19 @@ public class Main {
         Path pathOutput = Path.of(outputFileName);
 
         try {
+            Files.writeString(pathOutput, "");
             List<String> allLines = Files.readAllLines(pathInput);
             String[] regex = { "\\d{2}/\\d{2}/\\d{4} \\w+", "\\d{2}/\\d{1}/\\d{4} \\w+", "\\d{4}-\\d{2}-\\d{2} \\w+", "\\w+ \\d{2}.\\d{2}.\\d{4}" };
-            String[] pattern = { "(\\d{2})/(\\d{2})/(}\\d{4) (\\w+)", "(\\d{2})/(\\d{1})/(\\d{4}) (\\w+)", "(\\d{4})-(\\d{2})-(\\d{2}) (\\w+)", "(\\w+) (\\d{2}).(\\d{2}).(\\d{4})" };
+            String[] pattern = { "(\\d{2})/(\\d{2})/(\\d{4}) (\\w+)", "(\\d{2})/(\\d{1})/(\\d{4}) (\\w+)", "(\\d{4})-(\\d{2})-(\\d{2}) (\\w+)", "(\\w+) (\\d{2}).(\\d{2}).(\\d{4})" };
+            MyData lastWrittenDate = null;
             for (String line : allLines) {
                 for (int i = 0; i < regex.length; i++) {
                     if (line.matches(regex[i]))
                     {
-                        System.out.println(line+"   "+i);
                         MyData mydata = MyData.parseDate(line, pattern[i], i);
-                        System.out.println(mydata.formatAsString());
-                        if (mydata != null) {
+                        if (mydata != null && !mydata.isEqual(lastWrittenDate)) {
                             Files.writeString(pathOutput, mydata.formatAsString() + System.lineSeparator(), StandardOpenOption.APPEND);
+                            lastWrittenDate = mydata;
                             rewrittenDates += 1;
                         }
                         break;
