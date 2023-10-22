@@ -55,4 +55,17 @@ public class MyData {
     public String formatAsString() {
         return String.format("day = %02d, month = %02d, year = %04d, weekday = %s", day, month, year, dayOfTheWeek);
     }
+
+    public boolean isEqual(MyData secondData)
+    {
+        if(secondData == null)
+        {
+            return false;
+        }
+        if(day == secondData.day && month == secondData.month && year == secondData.year && dayOfTheWeek.equals(secondData.dayOfTheWeek))
+        {
+            return true;
+        }
+        return false;
+    }
 }
