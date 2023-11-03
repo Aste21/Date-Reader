@@ -14,24 +14,25 @@ public class MyData {
         this.dayOfTheWeek = dayOfTheWeek;
     }
 
-    public static MyData parseDate(String input, String regex, int formatType) {
+
+    public static MyData parseDate(String input, String patternString) {
         int groupDay, groupMonth, groupYear, groupDayOfTheWeek;
-        switch (formatType) {
-            case 0, 1 -> {
+        switch (patternString) {
+            case "(\\d{2})/(\\d{2})/(\\d{4}) (\\w+)", "(\\d{2})/(\\d{1})/(\\d{4}) (\\w+)" -> {
                 groupDay = 1;
                 groupMonth = 2;
                 groupYear = 3;
                 groupDayOfTheWeek = 4;
             }
-            case 2 -> {
+            case "(\\d{4})-(\\d{2})-(\\d{2}) (\\w+)" -> {
                 groupDay = 3;
                 groupMonth = 2;
                 groupYear = 1;
                 groupDayOfTheWeek = 4;
             }
-            case 3 -> {
+            case "(\\w+) (\\d{2}).(\\d{2}).(\\d{4})" -> {
                 groupDay = 2;
-                groupMonth = 3; 
+                groupMonth = 3;
                 groupYear = 4;
                 groupDayOfTheWeek = 1;
             }
@@ -39,7 +40,7 @@ public class MyData {
                 return null;
             }
         }
-        Pattern pattern = Pattern.compile(regex);
+        Pattern pattern = Pattern.compile(patternString);
         Matcher matcher = pattern.matcher(input);
         if (matcher.find()) {
             return new MyData(
@@ -56,14 +57,12 @@ public class MyData {
         return String.format("day = %02d, month = %02d, year = %04d, weekday = %s", day, month, year, dayOfTheWeek);
     }
 
-    public boolean isEqual(MyData secondData)
-    {
-        if(secondData == null)
-        {
+    public boolean isEqual(MyData secondData) {
+        if (secondData == null) {
             return false;
         }
-        if(day == secondData.day && month == secondData.month && year == secondData.year && dayOfTheWeek.equals(secondData.dayOfTheWeek))
-        {
+        if (day == secondData.day && month == secondData.month && year == secondData.year
+                && dayOfTheWeek.equals(secondData.dayOfTheWeek)) {
             return true;
         }
         return false;
